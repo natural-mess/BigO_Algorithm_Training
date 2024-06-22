@@ -19,23 +19,33 @@ int main()
     int countword = 0;
     int indexResult=0;
 
-    (void)fgets(str, sizeof(str), stdin);
+    // (void)fgets(str, sizeof(str), stdin);
+    scanf(" %[^\n]%*c", str);
 
-    for (int i = 0; str[i]!='\n'; i++)
+    for (int i = 0; str[i]!='\0'; i++)
     {
         countletter++;
     }
+
+    // printf("%d", countletter);
     
     for (int i = (countletter-1); i>=0; i--)
     {
-        if (i==0)
+        if (i==0 && indexResult==0)
         {
-            for (int p = 0; str[p] != ' '; p++)
+            for (int p = 0; (str[p] != '\0'); p++)
             {
                 result[indexResult] = str[p];
                 indexResult++;
             }
-            
+        }
+        else if (i==0 && indexResult!=0)
+        {
+            for (int p = 0; (str[p] != ' '); p++)
+            {
+                result[indexResult] = str[p];
+                indexResult++;
+            }
         }
         else if (str[i]!=' ')
         {
