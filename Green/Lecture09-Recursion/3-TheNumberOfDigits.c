@@ -2,18 +2,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-int count=0;
+int count=1;
 
 int theNumberOfDigits(int n)
 {
-    count++;
     if (n/10==0)
     {
         return count;
     }
     else
     {
-        return theNumberOfDigits(n/10);
+        return count+theNumberOfDigits(n/10);
     }
 }
 
