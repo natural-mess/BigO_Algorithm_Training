@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Node {
+struct Node 
+{
     int data;
     Node *left;
     Node *right;
@@ -45,36 +46,40 @@ void freeTree(Node *root)
     delete root;
 }
 
-void listEvenNumber(Node *root)
+int sumValueLessThanX(Node *root, int x)
 {
     if (root == NULL)
     {
-        return;
+        return 0;
     }
-
-    listEvenNumber(root->left);
-    listEvenNumber(root->right);
-	
-    if (root->data %2 == 0)
+    int sum = 0;
+    if (root->data < x)
     {
-        cout << root->data << " ";
+        sum = root->data;
     }
-	
+    else
+    {
+        sum = 0;
+    }
+    
+    return sum + sumValueLessThanX(root->left, x) + sumValueLessThanX(root->right, x);
 }
+
 
 int main()
 {
-    int n;
-    cin >> n;
+    int n, x;
+    cin >> n >> x;
     int a[n];
     Node *root = NULL;
-    for (int i = 1; i <= n; ++i)
+    for (int i = 0; i < n; ++i)
     {
         cin >> a[i];
         insertBST(root, a[i]);
     }
-    listEvenNumber(root);
-    
+
+    cout << sumValueLessThanX(root, x);
+
     freeTree(root);
     return 0;
 }
