@@ -1,3 +1,16 @@
+/*
+Books - L2
+st = 0
+sum = 0
+res = 0
+for i : 0 -> n - 1
+	sum += a[i]
+	while (sum > t)
+	{ sum -= a[st]; ++st; }
+	
+	res = max(res, i - st + 1)
+*/
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -35,6 +48,6 @@ int main()
             return 0;
         }
     }
-     cout << -1 << " " << -1;
+    cout << -1 << " " << -1;
     return 0;
 }

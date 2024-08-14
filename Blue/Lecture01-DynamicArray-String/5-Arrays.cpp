@@ -3,28 +3,77 @@ using namespace std;
 
 int main()
 {
-    int nA, nB;
+    int nA, nB, k, m;
     cin >> nA >> nB;
-    int k, m;
-    cin >> k >> m;
-
+    cin >> k  >> m;
     vector<int> A(nA);
+    vector<int> B(nB);
     for (int i = 0; i < nA; i++)
     {
-        int x;
-        cin >> x;
-        A.push_back(x);
+        cin >> A[i];
     }
-
-    vector<int> B(nB);
     for (int i = 0; i < nB; i++)
     {
-        int x;
-        cin >> x;
-        B.push_back(x);
+        cin >> B[i];
     }
 
+    bool check = false;
+    int indexA = 0, countA = 0;
+    int indexB = 0, countB = 0;
+    bool flagB = false;
+    while (indexA<nA)
+    {
+        if (countA < k)
+        {
+            if (B[indexB] > A[indexA])
+            {
+                if (countA < k)
+                {
+                    countA++;
+                    indexA++;
+                }
+                if (countB < m && flagB == false)
+                {
+                    countB++;
+                    flagB = true;
+                }
+            }
+            else //if (B[indexB]<=A[indexA])
+            {
+                indexB++;
+                flagB = false;
+                countB=0;
+            }
+        }
+        else
+        {
+            indexB++;
+            if (countB<m && indexB<nB)
+            {
+                countB++;
+            }
+        }
+        if (countA >= k && countB >= m)
+        {
+            check = true;
+            break;
+        }
+        if (indexB>=nB)
+        {
+            break;
+        }
+    }
     
+    // cout << i << endl << indexA << endl;
+    (check==true) ? (cout<<"YES") : (cout<<"NO");
+    // if (countB >= m && nA >= k)
+    // {
+    //     cout << "YES";
+    // }
+    // else
+    // {
+    //     cout << "NO";
+    // }
 
     return 0;
 }
