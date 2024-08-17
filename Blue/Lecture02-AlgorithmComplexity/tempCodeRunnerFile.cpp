@@ -6,8 +6,8 @@ int main()
     int n, m, x, y;
     cin >> n >> m >> x >> y;
 
-    vector<int> a(n);
-    vector<int> b(m);
+    vector<long long> a(n);
+    vector<long long> b(m);
 
     for (int i = 0; i < n; i++)
     {
@@ -20,17 +20,23 @@ int main()
     }
     int sizeC = max(m,n);
     vector<int> c(sizeC+1, 0);
+    vector<int> d(sizeC+1, 0);
     // cout << c.size() << endl;
 
     int st = 0;
     int count = 0;
+    int indexC = 0;
     for (int i = 0; i < m; i++)
     {
         while (st<n)
         {
-            if (b[i]>=(a[st]-x) && b[i]<=(a[st]+y))
+            long long left = a[st]-x;
+            long long right = a[st]+y;
+            if (b[i]>=left && b[i]<=right)
             {
-                c[i+1] = st+1;
+                c[indexC] = i+1;
+                d[indexC] = st+1;
+                indexC++;
                 count++;
                 st++;
                 break;
@@ -50,12 +56,9 @@ int main()
     cout << count << endl;
     if (count > 0)
     {
-        for (int i = 0; i < c.size(); i++)
+        for (int i = 0; i < indexC; i++)
         {
-            if (c[i]!=0)
-            {
-                cout << c[i] << " " << i << endl;
-            }
+            cout << d[i] << " " << c[i] << endl;
         }
     }
     
