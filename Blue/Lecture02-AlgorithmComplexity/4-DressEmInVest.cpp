@@ -35,8 +35,12 @@ int main()
                 st++;
                 break;
             }
-            else
+            else 
             {
+                if (a[st]+y>b[i])
+                {
+                    break;
+                }
                 st++;
             }
         }
