@@ -1,76 +1,81 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<int> graph[100001];
-
-queue <int> qu;
-bool visited[100001];
-int d[100001];
-vector<int> cat[100001];
 
 int main()
 {
     int n, m;
     cin >> n >> m;
-    int x, y;
-    int indexA = 1;
-    int a[n];
 
+    int cat[n+1];
+    char visited[n+1];
+    
     int countCat = 0;
-
-    for (int i = 1; i <= n; ++i)
-    {
-        visited[i] = false;
-        d[i] = -1;
-        graph[i].clear();
-    }
+    vector <int> graph[n+1];
 
     for (int i = 1; i <= n; i++)
     {
-        cin >> a[i];
-        if (i==1 && a[i]==1)
-        {
-            countCat++;
-            indexA++;
-        }
+        cin >> cat[i];
+        visited[i] = -1;
     }
 
-    for (int i = 0; i < (n-1); i++)
+    int x, y;
+    for (int i = 1; i <= n-1; i++)
     {
         cin >> x >> y;
         graph[x].push_back(y);
         graph[y].push_back(x);
     }
-    // dinh 1 la goc
-    // d[1] = 0;
+    queue <int> qu;
     qu.push(1);
-    visited[1] = true;
-    bool signal = false;
-
-    while (!qu.empty())
+    if (cat[1] == 1)
     {
-
-        int j = qu.front();
+        visited[1] = 1;
+    }
+    else
+    {
+        visited[1] = 0;
+    }
+    
+    int quElement;
+    int index = 1;
+    while(!qu.empty())
+    {
+        quElement = qu.front();
         qu.pop();
-        for (auto i: graph[j])
+
+        for (auto i: graph[quElement])
         {
-            if (visited[i] == false)
-            {
-                visited[i] = true;
-                if (i==indexA && a[indexA]==1)
+            if (visited[i] < 0)
+            {   
+                if (cat[i]==1)
                 {
-                    countCat++;
+                    visited[i] = visited[quElement] + 1;
                 }
-                if (countCat<=m)
+                else
+                {
+                    visited[i] = 0;
+                }
+                if (visited[i]<=m)
                 {
                     qu.push(i);
                 }
                 
             }
-            indexA++;
         }
-        countCat = 0;
     }
+    int res = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        if (graph[i].size() == 1)
+        {
+            if (visited[i] <= m && visited[i]>-1)
+            {
+                res++;
+            }
+        }
+    }
+    cout<< res;
 
     return 0;
 }
