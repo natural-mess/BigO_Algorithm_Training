@@ -1,6 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// tao 1 pair
+// voi moi hoa don, push vao queue so tien va so thu tu nhap cua so tien do, vi du {1, 1}, {2, 2}, {3, 3}, {1, 4}
+// pop 1 phan tu tu queue ra thi danh dau so thu tu nhap cua phan tu do la true
+// truoc khi pop, kiem tra xem marker cua so thu tu nhap do co la false khong, neu la false thi lay duoc, neu khong thi bo qua
+
 int main()
 {
     long long n;
@@ -13,11 +18,14 @@ int main()
     long long temp, index;
     priority_queue<long long> q_max, q_maxTemp;
     priority_queue<long long, vector<long long>, greater<long long>> q_min, q_minTemp;
+
+    bool marker[5002];
+    long long count=0;
     for (int i = 0; i < n; i++)
     {
         temp = 0;
         cin >> k;
-        
+        memset(marker, false, sizeof(marker));
         for (int j = 0; j < k; j++)
         {
             cin >> x;
