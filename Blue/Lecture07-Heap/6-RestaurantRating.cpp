@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// dung 2 queue, 1 min heap 1 max heap, min heap chua 1/3 rating dau, max heap chua 2/3 rating con lai
+
 #define ONE_THIRD 3
 
 int main()
