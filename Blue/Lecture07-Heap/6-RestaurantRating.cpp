@@ -1,15 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// dung 2 queue, 1 min heap 1 max heap, min heap chua 1/3 rating dau, max heap chua 2/3 rating con lai
-
 #define ONE_THIRD 3
 
 int main()
 {
-    int n, cmd, x, minRating=0, numMinRating, binSize;
+    int n, cmd, x, numFirstRating, countRating=0;
     priority_queue<int> maxHeap;
-    queue<int> maxHeap_bin;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
 
     cin >> n;
     while (n--)
@@ -17,31 +15,50 @@ int main()
         cin >> cmd;
         if (cmd == 1)
         {
+            countRating++;
             cin >> x;
-            maxHeap.push(x);
-        }
-        else
-        {
-            if (maxHeap.size() < 3)
+            if (countRating <= 3)
             {
-                cout << "No reviews yet" << endl;
+                maxHeap.push(x);
             }
             else
             {
-                numMinRating = maxHeap.size() / ((int)ONE_THIRD);
-                while (numMinRating--)
+                numFirstRating = countRating / ONE_THIRD;
+                if (x > maxHeap.top())
                 {
-                    minRating = maxHeap.top();
-                    maxHeap_bin.push(minRating);
-                    maxHeap.pop();
+                    minHeap.push(x);
+                    while(minHeap.size() > numFirstRating)
+                    {
+                        int temp = minHeap.top();
+                        minHeap.pop();
+                        maxHeap.push(temp);
+                    }
                 }
-                cout << minRating << endl;
-                binSize = maxHeap_bin.size();
-                while (binSize--)
+                else
                 {
-                    maxHeap.push(maxHeap_bin.front());
-                    maxHeap_bin.pop();
+                    maxHeap.push(x);
+                    while(minHeap.size() < numFirstRating)
+                    {
+                        int temp = maxHeap.top();
+                        maxHeap.pop();
+                        minHeap.push(temp);
+                    }
                 }
+            }
+        }
+        else
+        {
+            if (countRating < 3)
+            {
+                cout << "No reviews yet" << endl;
+            }
+            else if (countRating == 3)
+            {
+                cout << maxHeap.top() << endl;
+            }
+            else
+            {
+                cout << minHeap.top() << endl;
             }
         }
     }

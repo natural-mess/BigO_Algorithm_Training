@@ -3,9 +3,9 @@ using namespace std;
 
 struct dataStructure
 {
-    int isStack = -1;
-    int isQueue = -1;
-    int isHeap = -1;
+    int isStack = 1;
+    int isQueue = 1;
+    int isHeap = 1;
 };
 
 
@@ -15,11 +15,15 @@ int main()
     stack<int> st;
     queue<int> q;
     priority_queue<int> maxHeap;
+    dataStructure ret;
+    bool flag;
     while (cin >> n)
     {
         int cmd, x, y;
-        dataStructure ret;
-
+        ret.isHeap = 1;
+        ret.isQueue = 1;
+        ret.isStack = 1;
+        flag = false;
         while (n--)
         {
             cin >> cmd;
@@ -29,99 +33,71 @@ int main()
                 st.push(x);
                 q.push(x);
                 maxHeap.push(x);
+                flag = true;
             }
             else
             {
                 cin >> y;
 
-                if (ret.isStack!=2)
+                if (flag == false)
                 {
-                    if (st.empty())
-                    {
-                        ret.isStack = 2;
-                    }
-                    else if (st.empty()!=true && y==st.top())
-                    {
-                        ret.isStack = 1;
-                        st.pop();
-                    }
-                    else if (st.empty()!=true && y!=st.top())
-                    {
-                        ret.isStack = 2;
-                    }
+                    break;
                 }
-                
-                if (ret.isQueue!=2)
+                else
                 {
-                    if (q.empty())
+                    if (y!=st.top())
                     {
-                        ret.isQueue = 2;
+                        ret.isStack = 0;
                     }
-                    else if (q.empty()!=true && y==q.front())
-                    {
-                        ret.isQueue = 1;
-                        q.pop();
-                    }
-                    else if (q.empty()!=true && y!=q.front())
-                    {
-                        ret.isQueue = 2;
-                    }
-                }
-                
-                if (ret.isHeap!=2)
-                {
-                    if (maxHeap.empty())
-                    {
-                        ret.isHeap = 2;
-                    }
-                    else if (maxHeap.empty()!=true && y==maxHeap.top())
-                    {
-                        ret.isHeap = 1;
-                        maxHeap.pop();
-                    }
-                    else if (maxHeap.empty()!=true && y!=maxHeap.top())
-                    {
-                        ret.isHeap = 2;
-                    }
-                }
-            }
-
-            if (n==0)
-            {
-                if (ret.isHeap!=1 && ret.isQueue!=1 && ret.isStack!=1)
-                {
-                    cout << "impossible\n";
-                }
-                else if ((ret.isStack==1 && ret.isQueue==1) || (ret.isStack==1 && ret.isHeap==1) || (ret.isHeap==1 && ret.isQueue==1) || (ret.isStack==1 && ret.isQueue==1 && ret.isHeap==1))
-                {
-                    cout << "not sure\n";
-                }
-                else if (ret.isStack == 1)
-                {
-                    cout << "stack\n";
-                }
-                else if (ret.isQueue == 1)
-                {
-                    cout << "queue\n";
-                }
-                else if (ret.isHeap == 1)
-                {
-                    cout << "priority queue\n";
-                }
-                while (st.empty()!=true)
-                {
                     st.pop();
-                }
-                while (q.empty()!=true)
-                {
+            
+                    if (y!=q.front())
+                    {
+                        ret.isQueue = 0;
+                    }
                     q.pop();
-                }
-                while (maxHeap.empty()!=true)
-                {
+                
+                    if (y!=maxHeap.top())
+                    {
+                        ret.isHeap = 0;
+                    }
                     maxHeap.pop();
                 }
-            }
+            }      
         }
+        if (ret.isHeap + ret.isQueue + ret.isStack == 0)
+        {
+            cout << "impossible\n";
+        }
+        else if (ret.isHeap + ret.isQueue + ret.isStack >= 2)
+        {
+            cout << "not sure\n";
+        }
+        else if (ret.isStack == 1)
+        {
+            cout << "stack\n";
+        }
+        else if (ret.isQueue == 1)
+        {
+            cout << "queue\n";
+        }
+        else if (ret.isHeap == 1)
+        {
+            cout << "priority queue\n";
+        }
+
+        while (st.empty()!=true)
+        {
+            st.pop();
+        }
+        while (q.empty()!=true)
+        {
+            q.pop();
+        }
+        while (maxHeap.empty()!=true)
+        {
+            maxHeap.pop();
+        } 
     }
 
 
