@@ -1,30 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<string> graph[202];
+vector<int> graph[202];
 int visited[202];
-
-int bfs (pair<string,string> inputString)
-{
-
-}
 
 int main()
 {
     int n;
     cin >> n;
-    cout << endl;
+    //cout << endl;
 
     while (n--)
     {
         vector<string> data;
         string dataInput;
 
-        do
+        while (1)
         {
             cin >> dataInput;
+            if (dataInput == "*")
+            {
+                break;
+            }
             data.push_back(dataInput);
-        } while (dataInput != "*\0");
+        } //while (dataInput != "*\0");
         // for (int i = 0; i < data.size(); i++)
         // {
         //     cout << data[i] << endl;
@@ -35,25 +34,6 @@ int main()
             graph[i].clear();
         }
         
-        string pairs, begin, end;
-        vector<pair<string, string>> expectedResult;
-        pair<string, string> extractedWord;
-        char* p;
-        cin.ignore();
-        do
-        {
-            getline(cin, pairs);  // Read the entire line
-            if (pairs.empty()) 
-            {  // Check for an empty string
-                break;
-            }
-            stringstream ss(pairs);  
-            ss >> begin >> end;
-            extractedWord.first = begin;
-            extractedWord.second = end;
-            expectedResult.push_back(extractedWord);
-        } while (true);
-
         char flag;
         for (int i = 0; i < data.size()-1; i++)
         {
@@ -72,23 +52,58 @@ int main()
                     }
                     if (flag == 1)
                     {
-                        graph[i].push_back(data[j]);
-                        graph[j].push_back(data[i]);
-                    }
+                        graph[i].push_back(j);
+                        graph[j].push_back(i);
+                    }                    
                 }
             }
         }
 
-        queue<string> qu;
-        for (int i = 0; i < expectedResult.size(); i++)
+        string pairs, begin, end;
+        queue<int> qu;
+        cin.ignore();
+        while (getline(cin, pairs) && pairs!="")
         {
-            qu.push(expectedResult[i].first);
-            while (qu.empty()!= true)
+            //getline(cin, pairs);  // Read the entire line
+            //if (pairs.empty()) 
+            //{  // Check for an empty string
+            //    break;
+            //}
+            stringstream ss(pairs);  
+            ss >> begin >> end;
+            memset(visited, -1, sizeof(visited));
+            int s = find(data.begin(), data.end(), begin) - data.begin();
+            int t = find(data.begin(), data.end(), end) - data.begin();
+            // cout << "s= " << s << endl;
+            // cout << "t= " << t << endl;
+            qu.push(s);
+            visited[s]++;
+            while (!qu.empty())
             {
-                 
+                auto x = qu.front();
+                qu.pop();
+                if (x == t)
+                {
+                    break;
+                }
+
+                for (int u = 0; u < graph[x].size(); u++)
+                {
+                    int v = graph[x][u];
+                    if (visited[v] < 0)
+                    {
+                        visited[v]= visited[x] + 1;
+                        qu.push(v);
+                    }
+                }
             }
+            while(!qu.empty())
+            {
+                qu.pop();
+            }
+            cout << begin << " " << end << " " << visited[t] << endl;
         }
-        
+        if (n>0) cout<<endl;
     }
 
     return 0;
