@@ -1,17 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define MAX 26
+#define MAX 4 // A, C, G, T
+vector<char> dna = {'A', 'C', 'G', 'T'};
+int res;
 struct Node
 {
     struct Node *child[MAX];
-    int countWord;
+    int countChar;
 };
 
 struct Node *newNode()
 {
     struct Node *node = new Node;
-    node->countWord = 0;
+    node->countChar = 0;
     for (int i = 0; i < MAX; i++)
     {
         node->child[i] = NULL;
@@ -19,36 +21,23 @@ struct Node *newNode()
     return node;
 }
 
-void addWord (struct Node *root, string s)
+void addWord (struct Node *root, const string &s)
 {
-    int ch;
+    int ch, level;
     struct Node *temp = root;
     for (int i = 0; i < s.size(); i++)
     {
-        ch = s[i] - 'a';
+        ch = find(dna.begin(), dna.end(), s[i]) - dna.begin();
+        level = i+1;
         if (temp->child[ch] == NULL)
         {
             temp->child[ch] = newNode();
         }
         temp = temp->child[ch];
+        temp->countChar++;
+        res = max(res, level*temp->countChar);
     }
-    temp->countWord++;
-}
-
-bool findWord (Node *root, string s)
-{
-    int ch;
-    struct Node *temp = root;
-    for (int i = 0; i < s.size(); i++)
-    {
-        ch = s[i] - 'a';
-        if (temp->child[ch] == NULL)
-        {
-            return false;
-        }
-        temp = temp->child[ch];
-    }
-    return temp->countWord > 0;
+    
 }
 
 int main()
@@ -60,12 +49,15 @@ int main()
     {
         int n;
         cin >> n;
+        string s;
+        res = 0;
         struct Node *DNAPrefix = newNode();
         for (int i = 0; i < n; i++)
         {
-            
+            cin >> s;
+            addWord(DNAPrefix, s);
         }
-        
+        cout << "Case " << tc++ << ": " << res << endl;
     }
 
     return 0;
