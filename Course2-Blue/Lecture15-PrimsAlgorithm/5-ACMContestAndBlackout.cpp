@@ -1,91 +1,130 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define MAX 1001
-const int INF = 1e9;
-vector<pair<int,int>> graph[MAX];
-vector<int> dist(MAX, INF);
-int path[MAX];
-bool visited[MAX];
-int N, M;
+const int MAX_N = 105;
+const int INF = 1e8;
 
-void printMST()
-{
-    int ans = 0;
-    for (int i = 0; i < N; i++)
-    {
-        if (path[i] == -1)
-        {
-            continue;
-        }
-        ans += dist[i];
-        // cout << path[i] << " - " << i << ": " << dist[i] << endl;
-    }
-    cout << ans;
-}
+int dist[MAX_N];
+bool mark[MAX_N][MAX_N][3 * MAX_N];
 
-struct option
-{
-    bool operator() (const pair<int, int> &a, const pair<int, int> &b) const
-    {
-        return a.second > b.second;
-    }
+struct Edge {
+    int u, v, c;
 };
 
-void prims(int src)
+vector<Edge> savedEdges, tempEdges;
+vector<pair<int, int>> adjList[MAX_N];
+bool visited[MAX_N];
+int path[MAX_N];
+int n, m, test;
+int degree[MAX_N];
+
+int prim(int source, vector<Edge> &edges) 
 {
-    priority_queue<pair<int, int>, vector<pair<int, int>>, option> pq;
-    pq.push(make_pair(src, 0));
-    dist[src] = 0;
-    while (!pq.empty())
+    fill(dist, dist + MAX_N, INF);
+    fill(visited, visited + MAX_N, false);
+    fill(path, path + MAX_N, -1);
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, source});
+    dist[source] = 0;
+
+    while (!pq.empty()) 
     {
-        int u = pq.top().first;
+        int u = pq.top().second;
         pq.pop();
+
+        if (visited[u]) continue;
         visited[u] = true;
 
-        for (auto i: graph[u])
+        for (auto &edge : adjList[u])
         {
-            int v = i.first;
-            int w = i.second;
+            int v = edge.first;
+            int c = edge.second;
 
-            if (!visited[v] && dist[v] > w)
-            {
-                dist[v] = w;
-                pq.push({v, w});
-                path[v] = u;
-            }
+            if (visited[v] || mark[u][v][c] || dist[v] <= c) 
+                continue;
+
+            dist[v] = c;
+            path[v] = u;
+            pq.push({c, v});
         }
     }
-}
 
-void ResetGraph()
-{
-	for (int i = 0; i < MAX; i++)
-	{
-		graph[i].clear();
-		visited[i] = false;
-		dist[i] = INF;
-		path[i] = -1;
-	}
-}
-
-int main()
-{
-    int t;
-    cin >> t;
-    while (t--)
+    int totalWeight = 0;
+    for (int i = 1; i <= n; i++) 
     {
-        ResetGraph();
-        cin >> N >> M;
-        int a, b, c;
-        for (int i = 0; i < M; i++)
-        {
-            cin >> a >> b >> c;
-            graph[a-1].push_back({b-1, c});
-            graph[b-1].push_back({a-1, c});
-        }
-        prims(0);
-        printMST();
+        if (dist[i] == INF) return -1;
+        totalWeight += dist[i];
     }
+
+    for (int i = 1; i <= n; i++)
+    {
+        if (path[i] != -1) {
+            edges.push_back({path[i], i, dist[i]});
+        }
+    }
+
+    return totalWeight;
+}
+
+int main() 
+{
+    cin >> test;
+
+    while (test--) 
+    {
+        memset(mark, false, sizeof(mark));
+        cin >> n >> m;
+
+        for (int i = 1; i <= n; i++)
+        {
+            adjList[i].clear();
+            degree[i] = 0;
+        }
+
+        for (int i = 0; i < m; i++)
+        {
+            int u, v, c;
+            cin >> u >> v >> c;
+            degree[u]++;
+            degree[v]++;
+            adjList[u].push_back({v, c});
+            adjList[v].push_back({u, c});
+        }
+
+        savedEdges.clear();
+        int mstWeight = prim(1, savedEdges);
+        cout << mstWeight;
+
+        int secondMstWeight = INF;
+
+        for (auto &edge : savedEdges) 
+        {
+            int u = edge.u, v = edge.v, c = edge.c;
+            mark[u][v][c] = mark[v][u][c] = true;
+            degree[u]--; 
+            degree[v]--;
+
+            tempEdges.clear();
+            int startNode = 1;
+            while (startNode <= n && degree[startNode] == 0)
+                startNode++;
+
+            int currentWeight = prim(startNode, tempEdges);
+            if (currentWeight >= 0) 
+            {
+                secondMstWeight = min(secondMstWeight, currentWeight);
+            }
+
+            mark[u][v][c] = mark[v][u][c] = false;
+            degree[u]++; 
+            degree[v]++;
+        }
+
+        if (secondMstWeight == INF) 
+            secondMstWeight = mstWeight;
+        cout << secondMstWeight;
+    }
+
     return 0;
 }
